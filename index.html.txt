@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💖</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffeef2;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            transition: background-color 0.8s ease;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            max-width: 400px;
+            z-index: 10;
+            position: relative;
+        }
+        .gif-container img {
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        h1 { color: #d63384; font-size: 26px; height: 80px; margin-bottom: 20px; }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            min-height: 100px;
+        }
+        button {
+            padding: 12px 28px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); }
+        #noBtn { background-color: #adb5bd; color: white; }
+        
+        /* Heart Rain Styling */
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            top: -20px;
+            user-select: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); }
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <div class="gif-container">
+        <img id="mainGif" src="https://media1.tenor.com/m/Y7vWshhN_6UAAAAC/bubu-dudu-bubu.gif" alt="Bubu Dudu">
+    </div>
+    <h1 id="question">Will you be my Valentine? 💖</h1>
+    
+    <div class="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+</div>
+
+<script>
+    const question = document.getElementById('question');
+    const mainGif = document.getElementById('mainGif');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const music = document.getElementById('bgMusic');
+
+    let noCount = 0;
+    let musicStarted = false;
+
+    const messages = [
+        "Will you be my Valentine? 💖",
+        "Wait... are you sure? 🥺",
+        "Think about it again! Please? 😭",
+        "But look how cute we are! ❤️‍🩹",
+        "Don't do this to me... 💔",
+        "I'm taking the 'No' away now! Say YES! 😤"
+    ];
+
+    function startMusic() {
+        if (!musicStarted) {
+            music.play().catch(() => console.log("Music play blocked until interaction"));
+            musicStarted = true;
+        }
+    }
+
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+        heart.style.opacity = Math.random();
+        heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+        document.body.appendChild(heart);
+        
+        setTimeout(() => heart.remove(), 5000);
+    }
+
+    noBtn.addEventListener('click', () => {
+        startMusic();
+        noCount++;
+
+        if (noCount < messages.length - 1) {
+            question.innerText = messages[noCount];
+            const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize * 1.3) + 'px';
+            yesBtn.style.padding = (currentSize * 0.8) + 'px ' + (currentSize * 1.6) + 'px';
+        } else {
+            question.innerText = messages[messages.length - 1];
+            noBtn.classList.add('hidden');
+        }
+    });
+
+    yesBtn.addEventListener('click', () => {
+        startMusic();
+        document.body.style.backgroundColor = "#ffb3c1";
+        question.innerText = "YAY! I KNEW IT! 🥰❤️";
+        mainGif.src = "https://media.tenor.com/m/v6aO3MZfVPUAAAAC/bubu-dudu-bubu-and-dudu.gif"; 
+        
+        noBtn.classList.add('hidden');
+        yesBtn.classList.add('hidden');
+
+        // Start the Heart Rain!
+        setInterval(createHeart, 150);
+    });
+</script>
+
+</body>
+</html>
